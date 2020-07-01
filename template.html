@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+
+
+  <script>
+    var data = `
+    <h1><%= title %></h1>
+    <ul>
+      <% for (var i = 0; i <= list.length - 1; i++) { %>
+        <li><%= list[i].name %></li>;
+      <% } %>
+    </ul>
+    `;
+
+
+
+
+    function template(data) {
+      var tpl = data.split(/(<%=|<%|%>)/);
+      var funcSource = `
+      var result = [];
+      with(data) {
+
+      `
+
+      for(var i = 0; i <= tpl.length - 1; i++) {
+        var value = tpl[i];
+        if(value === '<%=') {
+          funcSource += 'result.push(' + tpl[i + 1] + ')\n';
+          i++;
+        } else if(value === '<%') {
+          funcSource += tpl[i + 1] + '\n';
+          i++;
+        } else if(value === '%>') {
+
+        } else {
+          funcSource += 'result.push(`' + value + '`)\n';
+        }
+      }
+
+      funcSource += '}\n';
+      funcSource += 'return result.join("")';
+      return new Function('data', funcSource);
+    }
+
+
+  </script>
+</body>
+
+</html>
